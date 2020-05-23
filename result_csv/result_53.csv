@@ -1,0 +1,3 @@
+number_iter,hyper_parameters,test_accuracy
+1,{'lr': 0.007081582739531972},0.8658
+2,{'lr': 0.001},0.7965

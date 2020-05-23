@@ -1,0 +1,25 @@
+.QWidget {
+    padding: 6px;
+    background: #666666;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+QPushButton {
+    border: none;
+    color: white;
+    font-size: 20px;
+    font-weight: 300;
+    font-family: "Microsoft YaHei";
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+}
+
+QPushButton:hover {
+    border-left: 2px solid white;
+    font-weight: 400;
+}
+
+QPushButton:pressed {
+    border-left: 2px solid white;
+}

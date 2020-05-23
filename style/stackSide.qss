@@ -1,0 +1,67 @@
+.QWidget {
+    border: 1px solid #666666;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+QComboBox {
+    font-family: "Dengxian";
+    font: 16px;
+}
+
+QRadioButton {
+    font-family: "Dengxian";
+    font: 16px;
+}
+
+QCheckBox {
+    font-family: "Dengxian";
+    font: 16px;
+}
+
+QToolButton {
+    background-color: #666666;
+    border: 1px solid #ffffff;
+    border-radius: 4px;
+    padding: 2px;
+    outline: none;
+    min-width: 60px;
+}
+
+QToolButton:pressed {
+    background-color: #19232D;
+    border: 1px solid #19232D;
+}
+
+QToolButton:hover {
+    border: 1px solid #000000;
+}
+
+QPushButton {
+    background-color: #666666;
+    border: 1px solid #ffffff;
+    color: #F0F0F0;
+    border-radius: 4px;
+    padding: 3px;
+    outline: none;
+    font: 16px;
+    font-family = "Dengxian"
+    min-width: 80px;
+    min-height: 30px;
+}
+
+QPushButton:pressed {
+    background-color: #19232D;
+    border: 1px solid #19232D;
+}
+
+QPushButton:hover {
+    border: 1px solid #000000;
+}
+
+QToolTip {
+    color: #ffffff;
+    border: 0px solid black;
+    border-radius: 2px;
+    background: #666666;
+}
