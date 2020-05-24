@@ -1,24 +1,10 @@
 import numpy as np
-import train_net
 from .util import ensure_rng
+import train_net
 import global_variable
 
-'''
-如果一个对象是可哈希的,那么它可以被计算出哈希值,即可以调用__hash__(),而且是可比较的,即可以调用__eq__().
-可哈希对象可以作为字典的键,或者集合的成员.
-'''
-
-
 def _hashable(x):
-    # 确保数据点在字典中是可哈希的(hashable).
     return tuple(map(float, x))
-
-
-'''
-贝叶斯优化的核心数据结构.
-包括全部的计算过程信息,计算过的最优值等.
-'''
-
 
 class TargetSpace(object):
     '''
@@ -96,10 +82,7 @@ class TargetSpace(object):
         try:
             assert set(params) == set(self.keys)
         except AssertionError:
-            raise ValueError(
-                "Parameters' keys ({}) do ".format(sorted(params)) + "not match the expected set of keys ({}).".format(
-                    self.keys)
-            )
+            print("数量不一致.")
         return np.asarray([params[key] for key in self.keys])
 
     # 给出超参数取值,令其和超参数名称组合,返回超参数字典.(前提:和待优化的超参数数量一致)
@@ -107,13 +90,10 @@ class TargetSpace(object):
         try:
             assert len(x) == len(self.keys)
         except AssertionError:
-            raise ValueError(
-                "Size of array ({}) is different than the ".format(
-                    len(x)) + "expected number of parameters ({}).".format(len(self.keys))
-            )
+            print("数量不一致.")
         return dict(zip(self.keys, x))
 
-    def _as_array(self, x):
+    def as_array(self, x):
         try:
             x = np.asarray(x, dtype=float)
         except TypeError:
@@ -125,14 +105,11 @@ class TargetSpace(object):
         try:
             assert x.size == self.dim
         except AssertionError:
-            raise ValueError(
-                "Size of array ({}) is different than the ".format(len(x)) +
-                "expected number of parameters ({}).".format(len(self.keys))
-            )
+            print("数量不一致.")
         return x
 
     def register(self, params, target):
-        x = self._as_array(params)
+        x = self.as_array(params)
         # 已有的数据点值不会再重复计算.
         if x in self:
             raise KeyError('Data point {} is not unique'.format(x))
@@ -153,7 +130,7 @@ class TargetSpace(object):
     """
 
     def probe(self, params, basic_params):
-        x = self._as_array(params)
+        x = self.as_array(params)
         # try是从历史记录_cache中查找,如果找到了说明这个值已经计算过.反之则需要新加计算.
         try:
             target = self._cache[_hashable(x)]
@@ -163,7 +140,7 @@ class TargetSpace(object):
             for i, key in enumerate(params.keys()):
                 if key in self._list:
                     basic_params[key] = int(params[key])
-                    params[key] =int(params[key])
+                    params[key] = int(params[key])
                 else:
                     basic_params[key] = params[key]
             print('basic_params:', basic_params)
@@ -189,7 +166,6 @@ class TargetSpace(object):
     ----------
     data:(ndarray)[num x dim]数组.num此处恒等于1,dim=超参数个数.得到超参数的随机取值.
     """
-
     def random_sample(self):
         data = np.empty((1, self.dim))
         for col, (lower, upper) in enumerate(self._bounds):
@@ -197,11 +173,10 @@ class TargetSpace(object):
                 data.T[col] = self.random_state.randint(lower, upper, size=1)
             else:
                 data.T[col] = self.random_state.uniform(lower, upper, size=1)
-        # 最终返回的是一个一维数组,每个元素对应的是给每个超参数生成的随机值.
 
         return data.ravel()
 
-    def maxs(self):
+    def max(self):
         # 获取最大的目标值和对应的参数.
         try:
             res = {
@@ -220,15 +195,5 @@ class TargetSpace(object):
         params = [dict(zip(self.keys, p)) for p in self.params]
 
         return [
-            {"target": target, "params": param}
-            for target, param in zip(self.target, params)
+            {"target": target, "params": param} for target, param in zip(self.target, params)
         ]
-
-    '''
-    更改超参数取值的上下限.
-    '''
-
-    def set_bounds(self, new_bounds):
-        for row, key in enumerate(self.keys):
-            if key in new_bounds:
-                self._bounds[row] = new_bounds[key]

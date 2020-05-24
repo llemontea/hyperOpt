@@ -60,11 +60,9 @@ class GridModel(object):
 
         return best_combination, best_test_acc, best_acc_history, test_acc_history
 
-
 # 获取超参数名称.
 def get_hyperparameter(hyperParams_dict):
     return hyperParams_dict.keys()
-
 
 def get_values(hyperParams_dict):
     values = []
@@ -82,12 +80,10 @@ def get_values(hyperParams_dict):
 
     return (item for item in values)
 
-
 # 获取全部的超参数组合.
 def get_combinations(hyperParams_dict):
     values = get_values(hyperParams_dict)
     return product(*values)
-
 
 # hyperParams_dict是超参数字典,键是超参数名称,值是列表[a,b,c],a和b表示取值上下限,c表示步长.
 def grid_search(dataset_name, is_k_fold, is_test, basic_params, hyperParams_dict, path, train_data, test_data):
@@ -102,11 +98,8 @@ def grid_search(dataset_name, is_k_fold, is_test, basic_params, hyperParams_dict
     global_variable.best_over = True
     global_variable.path = None
 
-    param_history = []
-
     for i, r in enumerate(gridModel.res):
         print('Iteration {}: \n\t{}'.format(i + 1, r))
-        param_history.append(r['params']['lr'])
 
     path_csv = 'result_csv/result_' + str(global_variable.num_opt) + '.csv'
     csvFile = open(path_csv, 'w', newline='')
@@ -122,7 +115,6 @@ def grid_search(dataset_name, is_k_fold, is_test, basic_params, hyperParams_dict
     global_variable.after_create = True
 
     return best_combination, best_test_acc
-    # return test_acc_history, best_acc_history
 
 def init_global_variable():
     global_variable.test_acc = []

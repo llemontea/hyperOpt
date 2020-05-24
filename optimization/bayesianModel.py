@@ -7,38 +7,25 @@ import csv
 def bayesian_search(dataset_name, is_k_fold, is_test, init_points, n_iter, acq, kappa, xi, basic_params, hyper_dict, path, mustInt_list, train_data, test_data):
     init_global_variable()
     optimizer = bayesian_optimization.BayesianModel(
-        path = path,
-        is_k_fold = is_k_fold,
-        is_test = is_test,
-        train_data = train_data,
-        test_data = test_data,
-        pbounds = hyper_dict,
-        mustInt_parameters = mustInt_list,
-        random_state = random.randint(0, 100)
+        path=path,
+        is_k_fold=is_k_fold,
+        is_test=is_test,
+        train_data=train_data,
+        test_data=test_data,
+        pbounds=hyper_dict,
+        mustInt_parameters=mustInt_list,
+        random_state=random.randint(0, 100)
     )
 
-    optimizer.maximize(basic_params, init_points = init_points, n_iter = n_iter, acq = acq, kappa = kappa, xi = xi)
+    optimizer.maximize(basic_params, init_points=init_points, n_iter=n_iter, acq=acq, kappa=kappa, xi=xi)
     global_variable.test_over = True
     global_variable.best_over = True
     global_variable.path = None
 
-    best_target = 0.0
-
-    best_target_history = []
-    test_target_history = []
-
     result = optimizer.max
-
-    param_history = []
 
     for i, r in enumerate(optimizer.res):
         print('Iteration {}: \n\t{}'.format(i + 1, r))
-        param_history.append(r['params']['lr'])
-
-        test_target_history.append(r['target'])
-        if r['target'] > best_target:
-            best_target = r['target']
-        best_target_history.append(best_target)
 
     path_csv = 'result_csv/result_' + str(global_variable.num_opt) + '.csv'
     csvFile = open(path_csv, 'w', newline='')
@@ -58,7 +45,6 @@ def bayesian_search(dataset_name, is_k_fold, is_test, init_points, n_iter, acq, 
     global_variable.after_create = True
 
     return result['params'], result['target']
-    # return test_target_history, best_target_history, param_history
 
 def init_global_variable():
     global_variable.test_acc = []

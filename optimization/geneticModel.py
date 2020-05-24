@@ -16,8 +16,6 @@ import csv
 比如,假设两个超参数的寻优,设染色体长度为20,种群数为200.
 那么就是:初始化两个染色体,每个染色体初始化200个随机取值,每个染色体的十进制取值用20位二进制数表示.
 '''
-
-
 class GeneticModel(object):
     '''
     population_size(int):种群数.=len(population[0])
@@ -27,7 +25,6 @@ class GeneticModel(object):
     pc(float):交叉概率阈值.(0<pc<1)
     pm(float):变异概率阈值.(0<pm<1)
     '''
-
     def __init__(self, is_k_fold, is_test, population_size, x_num, x_length, x_limit, x_key, iter_num, pc, pm, basic_params, path, train_data, test_data, mustInt_list):
         self.is_k_fold = is_k_fold
         self.is_test = is_test
@@ -52,7 +49,6 @@ class GeneticModel(object):
         return self.result
 
     '''记录历史计算信息.'''
-
     def register(self, hyper_dic, target):
         res_dic = {}
         res_dic['target'] = target
@@ -64,7 +60,6 @@ class GeneticModel(object):
     种群是一个list,其中的元素是染色体.
     每个染色体也是一个list,其中的元素是染色体的一个随机取值,是二进制形式的.
     '''
-
     def prime_species(self):
         population = []
 
@@ -87,7 +82,6 @@ class GeneticModel(object):
     population[][]:取染色体的一个随机二进制编码值.
     population[][][]:取染色体的一个随机二进制编码值的某一位.
     '''
-
     def translation(self, population):
         population_decimalism = []
 
@@ -104,7 +98,6 @@ class GeneticModel(object):
         return population_decimalism
 
     '''四舍五入,将浮点数转化为整数.'''
-
     def rounds(self, number):
         str_number = str(number)
         index = str_number.find('.')
@@ -143,10 +136,10 @@ class GeneticModel(object):
                     if temp[j] == 0.0:
                         temp[j] = (self.x_limit[j][1] - self.x_limit[j][0]) / 2
 
-            print('temp:', temp)
             params = dict(zip(self.x_key, temp))
             for i, key in enumerate(self.x_key):
                 self.basic_params[key] = temp[i]
+            print('basic_params:', self.basic_params)
 
             Tr = train_net.Train(self.train_data, self.test_data, self.is_k_fold, self.is_test, self.path, self.basic_params)
 
@@ -166,7 +159,6 @@ class GeneticModel(object):
         return fitness
 
     '''适应度求和'''
-
     def sum_value(self, fitness_value):
         total = 0.0
 
@@ -186,7 +178,6 @@ class GeneticModel(object):
     fitness[0]=fitness[0]
     这也是为什么要对原fitness进行倒序遍历的原因,正序遍历就会发生前后覆盖.
     '''
-
     def cumsum(self, fitness):
         # range(len(fitness)-1,-1,-1)实现的是倒序索引.
         for i in range(len(fitness) - 1, -1, -1):
@@ -206,10 +197,6 @@ class GeneticModel(object):
     population是原始的01二进制编码个体集合,population[]为待优化超参数数,population[][]是第x个超参数的全编码,population[][][]是第x个超参数的第y位编码(0或1).
     '''
     def selection(self, population, fitness_value):
-        print('population:', population)
-        print('fitness_values:', fitness_value)
-        print('population_size:', self.population_size)
-        print('x_num:', self.x_num)
         new_fitness = []
         total_fitness = self.sum_value(fitness_value)
 
@@ -220,7 +207,6 @@ class GeneticModel(object):
         # 重组适应度数组.由于浮点计算可能出现问题,所以强制令最后一个值为1.0.
         self.cumsum(new_fitness)
         new_fitness[-1] = 1.0 # 有时候太精细的小数加法会导致最后加和不等于1.0,所以强制改一下.
-        print("new_fitness:", new_fitness)
 
         new_population = copy.deepcopy(population)
         new_in = 0
@@ -369,8 +355,6 @@ def genetic_search(dataset_name, is_k_fold, is_test, count_iter, count_populatio
         # 种群更新:选择,交叉与变异
         origin_population = copy.deepcopy(population) # 存一个原始的种群.把list类型传参是作为引用传参的,population会随之改变.
         best_param, population = geneticModel.selection(population, fitness_value)
-        print("before selection:", geneticModel.translation(origin_population))
-        print("after selection:", geneticModel.translation(population))
         geneticModel.crossover(population)
         geneticModel.mutation(population)
         geneticModel.replace(best_param, population, origin_population)
@@ -380,12 +364,9 @@ def genetic_search(dataset_name, is_k_fold, is_test, count_iter, count_populatio
     global_variable.best_over = True
     global_variable.path = None
 
-    param_history = []
-
     best_target = 0.0
     for i, r in enumerate(geneticModel.res):
         print('Iteration {}: \n\t{}'.format(i + 1, r))
-        param_history.append(r['params']['lr'])
 
         test_acc_history.append(r['target'])
         if r['target'] > best_target:
@@ -410,7 +391,6 @@ def genetic_search(dataset_name, is_k_fold, is_test, count_iter, count_populatio
     global_variable.after_create = True
 
     return dict(zip(x_key, best_params)), best_fitness
-    # return test_acc_history, best_acc_history, param_history
 
 def init_global_variable():
     global_variable.test_acc = []

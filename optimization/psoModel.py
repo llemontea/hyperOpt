@@ -3,7 +3,6 @@ import train_net
 import numpy as np
 import pymysql
 import csv
-
 import global_variable
 
 class PSOModel(object):
@@ -16,7 +15,6 @@ class PSOModel(object):
     w(float):惯性因子,表示粒子之前运动方向在本次方向上的惯性大小.
     particle_limit(list):超参数取值范围.
     '''
-
     def __init__(self, is_k_fold, is_test, particle_num, particle_dim, iter_num, c1, c2, extra_num, key, particle_limit, basic_params, path, train_data, test_data, mustInt_list):
         self.is_k_fold = is_k_fold
         self.is_test = is_test
@@ -41,7 +39,6 @@ class PSOModel(object):
         return self.result
 
     '''记录历史计算信息.'''
-
     def register(self, hyper_dic, target):
         res_dic = {}
         res_dic['target'] = target
@@ -49,7 +46,6 @@ class PSOModel(object):
         self.res.append(res_dic)
 
     '''四舍五入,将浮点数转化为整数.'''
-
     def rounds(self, number):
         str_number = str(number)
         index = str_number.find('.')
@@ -64,7 +60,6 @@ class PSOModel(object):
     注意初始化两个内容:一个是位置,一个是速度.
     位置是有限制的:位置的各个维度对应了各个超参数,所以必须位于超参数的范围内.
     '''
-
     def swarm_origin(self):
         particle_x = []
         particle_v = []
@@ -96,7 +91,6 @@ class PSOModel(object):
     添加额外的随机粒子.
     这会导致self.particle_num的值发生变化.
     '''
-
     def add_extra(self):
         extra_x = []
         extra_v = []
@@ -128,7 +122,6 @@ class PSOModel(object):
     计算适应度函数值,初始化pbest和gbest.
     粒子的位置就是各个待优化超参数的取值,所以需要把particle_x的各个值取出来,用适应度函数去求.
     '''
-
     def fitness(self, particle_x):
         fitness_value = []
 
@@ -190,25 +183,14 @@ class PSOModel(object):
                 # 把取值上下限差值的2/3作为速度的上下限.超过上下限则截断之.速度限制在前几代迭代中作用比较明显,后期随着粒子收敛,速度也不会超限了.
                 vMax = (self.particle_limit[j][1] - self.particle_limit[j][0]) * 2 / 3
                 if particle_v[i][j] > vMax:
-                    print("速度太快!")
+                    print("too fast!")
                     particle_v[i][j] = vMax
                 elif particle_v[i][j] < -vMax:
-                    print("速度太慢!")
+                    print("too slow!")
                     particle_v[i][j] = -vMax
 
             particle_x[i] = list(np.array(particle_x[i]) + np.array(particle_v[i]))
-            print('particle_x:', particle_x)
-            print('particle_v:', particle_v)
-        '''
-        for i in range(self.particle_num):
-            for j in range(self.particle_dim):
-                if particle_x[i][j] > self.particle_limit[j][1]:
-                    print("超出上边界！")
-                    particle_x[i][j] = self.particle_limit[j][1]
-                elif particle_x[i][j] < self.particle_limit[j][0]:
-                    print("超出下边界！")
-                    particle_x[i][j] = self.particle_limit[j][0]
-        '''
+
         # 将更新后的粒子位置固定在指定范围内.另一种约束方式是设置最大值边界,保证取值更新后不越界.
         # 这个方法有一个最大的问题在于,它是影响到所有粒子的,无论粒子是不是超出了指定范围,都会在这一步骤中进行更新.
         parameter_list = []
@@ -247,16 +229,11 @@ class PSOModel(object):
 
         return particle_x, particle_v
 
-
 def pso_search(dataset_name, is_k_fold, is_test, count_iter, count_point, c1, c2, w_low, w_high, extra_num, basic_params, hyperParams_dict, path, mustInt_list, train_data, test_data):
     init_global_variable()
     particle_dim = len(hyperParams_dict)
     key = list(hyperParams_dict.keys())
     particle_limit = list(hyperParams_dict.values())
-    print(particle_limit)
-
-    # particle_num会在过程中变化,所以为了绘图,最原始的值要保留下来.
-    origin_particle_num = count_point
 
     # 计算每次迭代使用的惯性因子值.
     new_w = []
@@ -307,9 +284,6 @@ def pso_search(dataset_name, is_k_fold, is_test, count_iter, count_point, c1, c2
             best_fitness = current_best_fitness
             gbest_parameter = current_best_parameter
 
-        print('pbest_parameters:', pbest_parameters)
-        print('gbest_parameter:', gbest_parameter)
-
         best_acc_history_pso.append(best_fitness)
         test_acc_history_pso.append(current_best_fitness)
 
@@ -328,22 +302,13 @@ def pso_search(dataset_name, is_k_fold, is_test, count_iter, count_point, c1, c2
         for i in range(psoModel.particle_num - len(fitness_value)):
             fitness_value.append(0.0)
 
-        print('w:', w)
-        print('fitness_value:', fitness_value)
-        print('pbest_parameters:', pbest_parameters)
-        print('gbest_parameter:', gbest_parameter)
-
     global_variable.test_over = True
     global_variable.best_over = True
     global_variable.path = None
 
-    param_history_1 = []
-    param_history_2 = []
-
     best_target = 0.0
     for i, r in enumerate(psoModel.res):
         print('Iteration {}: \n\t{}'.format(i + 1, r))
-        param_history_1.append(r['params']['lr'])
 
         test_acc_history.append(r['target'])
         if r['target'] > best_target:
@@ -368,7 +333,6 @@ def pso_search(dataset_name, is_k_fold, is_test, count_iter, count_point, c1, c2
     global_variable.after_create = True
 
     return dict(zip(key, gbest_parameter)), best_fitness
-    # return test_acc_history, best_acc_history, param_history_1, param_history_2
 
 def init_global_variable():
     global_variable.test_acc = []

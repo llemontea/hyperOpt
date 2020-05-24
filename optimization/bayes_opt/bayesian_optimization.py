@@ -1,8 +1,6 @@
 import warnings
-
 from .target_space import TargetSpace
 from .util import UtilityFunction, acq_max, ensure_rng
-
 from sklearn.gaussian_process.kernels import Matern
 from sklearn.gaussian_process import GaussianProcessRegressor
 
@@ -78,7 +76,7 @@ class BayesianModel():
     @property
     def max(self):
         # 取优化过程中的最大值.
-        return self._space.maxs()
+        return self._space.max()
 
     @property
     def res(self):
@@ -89,15 +87,7 @@ class BayesianModel():
         # _space.register()将新计算值添加到历史记录中.
         self._space.register(params, target)
 
-    def probe(self, params, basic_params, lazy=True):
-        # 计算param在目标函数上的观测值.
-        if lazy:
-            self._queue.add(params)
-        else:
-            self._space.probe(params, basic_params)
-
     '''下一步最有可能取得最优值的点.'''
-
     def suggest(self, utility_function):
         if len(self._space) == 0:
             # 如果_space为空,则用.random_sample()在范围内创建随机点.
@@ -124,8 +114,7 @@ class BayesianModel():
     确保队列在最开始的时候就包含元素(非空).
     给定init_points值,也就是事先往队列中填充的元素个数.填充的都是随机数.
     """
-
-    def _prime_queue(self, init_points):
+    def prime_queue(self, init_points):
         if self._queue.empty and self._space.empty:
             init_points = max(init_points, 1)
 
@@ -133,9 +122,8 @@ class BayesianModel():
             self._queue.add(self._space.random_sample())
 
     # 最大化函数值.
-    def maximize(self, basic_params, init_points=5, n_iter=25, acq = 'ucb', kappa = None, xi = None, **gp_params):
-        self._prime_queue(init_points)
-        self.set_gp_params(**gp_params)
+    def maximize(self, basic_params, init_points=5, n_iter=25, acq = None, kappa = None, xi = None):
+        self.prime_queue(init_points)
 
         # 获取acquisition function.
         util = UtilityFunction(kind = acq, kappa = kappa, xi = xi)
@@ -150,16 +138,4 @@ class BayesianModel():
             except StopIteration:
                 x_probe = self.suggest(util)
                 iteration += 1
-            self.probe(x_probe, basic_params, lazy=False)
-
-    """
-    更改超参数取值上下限.和target_space.py中的set_bounds完全一致.
-    ----------
-    new_bounds:(dict)超参数字典.包括了超参数名和其取值范围.
-    """
-
-    def set_bounds(self, new_bounds):
-        self._space.set_bounds(new_bounds)
-
-    def set_gp_params(self, **params):
-        self._gp.set_params(**params)
+            self._space.probe(x_probe, basic_params)

@@ -1,6 +1,5 @@
 import warnings
 import numpy as np
-
 from scipy.stats import norm
 from scipy.optimize import minimize
 
@@ -20,8 +19,6 @@ n_iter:运行scipy.minimize的次数.
 ----------
 return:x_max,采集函数得到的,下一个预测观测点.
 '''
-
-
 def acq_max(ac, gp, y_max, bounds, random_state, n_warmup=10000, n_iter=100):
     '''
     bounds是按照超参数名称的字母顺序排列好后,对应的上下限值.
@@ -37,10 +34,6 @@ def acq_max(ac, gp, y_max, bounds, random_state, n_warmup=10000, n_iter=100):
     x_max = x_tries[ys.argmax()]
     max_acq = ys.max()
 
-    '''
-    这里可以理解为:acquistion function的形状是通过n_warmup(1e5)个随机点构建而成的.
-    然后在这个acquisition function的基础上,计算出acquistion function的最大值.
-    '''
     x_seeds = random_state.uniform(bounds[:, 0], bounds[:, 1], size=(n_iter, bounds.shape[0]))
     for x_try in x_seeds:
         '''
@@ -59,7 +52,7 @@ def acq_max(ac, gp, y_max, bounds, random_state, n_warmup=10000, n_iter=100):
         if not res.success:
             continue
 
-        # 如果新计算的数据点比之前最优的值更优,则更新最优值.从不同的起点可能得到不同的结果,所以多跑些是好的.
+        # 如果新计算的数据点比之前最优的值更优,则更新最优值.
         if max_acq is None or -res.fun[0] >= max_acq:
             x_max = res.x
             max_acq = -res.fun[0]
@@ -69,13 +62,8 @@ def acq_max(ac, gp, y_max, bounds, random_state, n_warmup=10000, n_iter=100):
 
 
 '''获取并计算acquisition function.'''
-
-
 class UtilityFunction(object):
     def __init__(self, kind, kappa, xi):
-        """
-        如果使用的是UCB,需要一个kappa的常数值.
-        """
         self.kappa = kappa
         self.xi = xi
 
@@ -120,7 +108,7 @@ class UtilityFunction(object):
             warnings.simplefilter("ignore")
             mean, std = gp.predict(x, return_std=True)
 
-        # POI公式.
+        # PI公式.
         z = (mean - y_max - xi) / std
         return norm.cdf(z)
 
@@ -130,8 +118,6 @@ class UtilityFunction(object):
 np.random.RandomState()是一个伪随机数生成器.
 如果是None,就返回默认随机数发生器.如果提供种子值,就根据种子值创建随机数发生器.
 '''
-
-
 def ensure_rng(random_state=None):
     if random_state is None:
         random_state = np.random.RandomState()

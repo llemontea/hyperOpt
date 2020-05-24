@@ -80,7 +80,6 @@ def get_combinations(count, hyperParams_dict, mustInt_list):
 
     return values
 
-
 # hyperParams_dict是超参数字典,键是超参数名称,值是列表[a,b],a和b表示取值上下限.
 def random_search(dataset_name, is_k_fold, is_test, count, basic_params, hyperParams_dict, path, mustInt_list, train_data, test_data):
     init_global_variable()
@@ -93,11 +92,8 @@ def random_search(dataset_name, is_k_fold, is_test, count, basic_params, hyperPa
     global_variable.best_over = True
     global_variable.path = None
 
-    param_history = []
-
     for i, r in enumerate(randomModel.res):
         print('Iteration {}: \n\t{}'.format(i + 1, r))
-        param_history.append(r['params']['lr'])
 
     path_csv = 'result_csv/result_' + str(global_variable.num_opt) +'.csv'
     csvFile = open(path_csv, 'w', newline = '')
@@ -113,7 +109,6 @@ def random_search(dataset_name, is_k_fold, is_test, count, basic_params, hyperPa
     global_variable.after_create = True
 
     return best_combination, best_test_acc
-    # return test_acc_history, best_acc_history, param_history
 
 def init_global_variable():
     global_variable.test_acc = []
