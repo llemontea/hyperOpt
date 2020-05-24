@@ -1,4 +1,0 @@
-number_iter,hyper_parameters,test_accuracy
-1,{'batch_size': 165},0.8774
-2,{'batch_size': 310},0.8668
-3,{'batch_size': 240},0.8644

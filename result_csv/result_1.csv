@@ -1,5 +1,0 @@
-number_iter,hyper_parameters,test_accuracy
-1,{'lr': 0.001},0.823
-2,{'lr': 0.004},0.873
-3,{'lr': 0.007},0.8732
-4,{'lr': 0.01},0.8627
