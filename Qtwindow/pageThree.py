@@ -128,7 +128,6 @@ class threeWidget(QWidget):
             image.show()
         else:
             current = os.path.dirname(__file__)[:-9] + filename[2:]
-            print(current)
             os.startfile(current)
 
     def deleterows(self):
@@ -147,7 +146,6 @@ class threeWidget(QWidget):
                 # 注意这里传入的不能是index.row(),因为第几行并不一定对应着数值为几的id值.必须获取指定行的id号.
                 self.deleteData(id)
 
-                # 在删除后刷新页面.这里存在迷之BUG,只刷新一次会导致最后一行的行高短一截.所以得刷新两次.
                 self.init_form()
                 # self.init_form()
             else:
@@ -157,7 +155,6 @@ class threeWidget(QWidget):
                 message.setText('没有选择要删除的行.')
                 message.addButton(QPushButton("确定"), QMessageBox.YesRole)
                 message.exec_()
-
         else:
             pass
     '''
@@ -184,6 +181,7 @@ class threeWidget(QWidget):
         connection.close()
 
         basic_path = os.path.dirname(__file__)[:-9]
+        print(basic_path)
         csv_path = basic_path + '\\result_csv\\result_' + str(id) + '.csv'
         test_path = basic_path + '\\result_fig\\test_' + str(id) + '.png'
         best_path = basic_path + '\\result_fig\\best_' + str(id) + '.png'

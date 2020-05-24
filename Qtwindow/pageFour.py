@@ -3,6 +3,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 import chardet
 
+# 自定义编辑区域.附加行号显示,高亮文本等效果.
 class CodeEditor(QPlainTextEdit):
     class NumberBar(QWidget):
         def __init__(self, editor):
@@ -15,7 +16,6 @@ class CodeEditor(QPlainTextEdit):
             self.numberBarColor = QColor("#e8e8e8")
 
         def paintEvent(self, event):
-
             painter = QPainter(self)
             painter.fillRect(event.rect(), self.numberBarColor)
 
@@ -63,7 +63,8 @@ class CodeEditor(QPlainTextEdit):
         super(CodeEditor, self).__init__()
 
         self.setFont(QFont("Console", 12))
-        self.setLineWrapMode(QPlainTextEdit.NoWrap) # 非自动换行.
+        # 非自动换行.超出屏幕显示范围的部分会出现滚动条.
+        self.setLineWrapMode(QPlainTextEdit.NoWrap)
 
         self.number_bar = self.NumberBar(self)
         self.currentLineNumber = None
@@ -169,20 +170,35 @@ class fourWidget(QWidget):
         dialog.setFilter(QDir.Files)
 
         if dialog.exec_():
-            filenames = dialog.selectedFiles()
-            self.fileLabel.setText(str(filenames[0]))
-
-            fp = open(filenames[0], 'rb')
-            with fp:
-                # 自适应编码格式读取.有些.txt文件和.py文件是不同的编码,所以不解码的话就无法打开,进而卡死.
-                data = fp.read()
-                f_charinfo = chardet.detect(data)
-                self.code = f_charinfo['encoding']
-                edit.setPlainText(str(data.decode(f_charinfo['encoding'])))
-
-                edit.setEnabled(True)
-                self.saveButton.setEnabled(True)
-                self.saveasButton.setEnabled(True)
+            try:
+                print(dialog.selectedFiles())
+                filenames = dialog.selectedFiles()
+                print("1")
+                self.fileLabel.setText(str(filenames[0]))
+                print("2")
+                with open(filenames[0], 'rb') as fp:
+                    # 自适应编码格式读取.有些.txt文件和.py文件是不同的编码,所以不解码的话就无法打开,进而卡死.
+                    data = fp.read()
+                    print("3")
+                    f_charinfo = chardet.detect(data)
+                    print("4")
+                    self.code = f_charinfo['encoding']
+                    print("5")
+                    edit.setPlainText(str(data.decode(f_charinfo['encoding'])))
+                    print("6")
+                    edit.setEnabled(True)
+                    print("7")
+                    self.saveButton.setEnabled(True)
+                    print("8")
+                    self.saveasButton.setEnabled(True)
+                    print("9")
+            except Exception:
+                message = QMessageBox()
+                message.setWindowIcon(QIcon('icon/tip.png'))
+                message.setWindowTitle('打开文件失败')
+                message.setText('编解码及读取过程中出现问题,打开失败.')
+                message.addButton(QPushButton("确定"), QMessageBox.YesRole)
+                message.exec_()
 
     def newfile(self, edit):
         if len(edit.toPlainText()) != 0:

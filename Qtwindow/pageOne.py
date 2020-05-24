@@ -35,7 +35,7 @@ class oneWidget(QWidget):
         self.filepathEdit1 = QLineEdit()
         self.filepathButton1 = QToolButton()
         self.filepathButton1.setIcon(qtawesome.icon('fa.folder-open', color = 'white'))
-        self.label1 = QLabel('请选择要使用的torchvision.datasets数据集,并指定数据集存放的路径.如果尚无数据集,请在训练过程中保持网络畅通,以便下载资源.')
+        self.label1 = QLabel('请选择要使用的torchvision.datasets数据集,并指定数据集存放的路径.如果数据集还未准备好,请在训练过程中保持网络畅通,以便下载资源.')
         self.line11 = QFrame(self.main_widget)
 
         # radio2范围内控件.
@@ -614,22 +614,22 @@ class oneWidget(QWidget):
         self.tip_label = QLabel()
         self.tip_button = QPushButton('确定')
 
-        self.tip_label.setText('1.如果对超参数优化的目标比较宽松,想通过比较少的迭代找到一个较好的超参数即可:建议使用贝叶斯优化或者随机搜索.\n'
-                           '2.如果希望找到表现尽可能好的超参数,但对时间要求比较紧:建议使用贝叶斯优化.\n'
-                           '3.如果希望找到表现尽可能好的超参数,但对时间要求比较宽松:建议使用贝叶斯优化或者粒子群算法.\n'
-                           '4.如果目标是找到一个包含数个超参数取值的,表现较好的超参数取值集合:建议使用遗传算法.\n'
-                           '5.如果允许进行的优化迭代次数极少,可以考虑使用网格搜索或者随机搜索这类比较简单的优化方法.\n'
-                           '6.如果待优化的超参数数量较多,不建议使用网格搜索.\n'
-                           '7.如果初步优化结果发现最优超参数取值集中在极小的范围内,贝叶斯优化的表现可能比较好.\n'
-                           '8.如果初步优化结果发现在超参数取值在较大范围内都有相近的表现,则不建议使用遗传算法,因为很容易陷入局部最优.\n'
+        self.tip_label.setText('1.如果对超参数优化的目标比较宽松,想通过比较少的迭代找到一个较好的超参数即可:建议使用贝叶斯优化或者随机搜索.\n\n'
+                           '2.如果希望找到表现尽可能好的超参数,但对时间要求比较紧:建议使用贝叶斯优化.\n\n'
+                           '3.如果希望找到表现尽可能好的超参数,但对时间要求比较宽松:建议使用贝叶斯优化或者粒子群算法.\n\n'
+                           '4.如果目标是找到一个包含数个超参数取值的,表现较好的超参数取值集合:建议使用遗传算法.\n\n'
+                           '5.如果允许进行的优化迭代次数极少,可以考虑使用网格搜索或者随机搜索这类比较简单的优化方法.\n\n'
+                           '6.如果待优化的超参数数量较多,不建议使用网格搜索.\n\n'
+                           '7.如果初步优化结果发现最优超参数取值集中在极小的范围内,贝叶斯优化的表现可能比较好.\n\n'
+                           '8.如果初步优化结果发现在超参数取值在较大范围内都有相近的表现,则不建议使用遗传算法,因为很容易陷入局部最优.\n\n'
                            '9.在网络模型的稳定性非常差或者非常好的情况下,均建议使用贝叶斯优化.\n'
-                               '前者是因为贝叶斯优化更容易捕捉较优取值的细节,后者是因为可以充分发挥贝叶斯优化的优势.\n'
-                           '10.单超参数优化问题可以倾向于使用随机搜索和贝叶斯优化,但多参数优化问题中遗传算法和粒子群算法会有同样不错的表现.\n')
+                               '前者是因为贝叶斯优化更容易捕捉较优取值的细节,后者是因为可以充分发挥贝叶斯优化的优势.\n\n'
+                           '10.单超参数优化问题可以倾向于使用随机搜索和贝叶斯优化,但多参数优化问题中遗传算法和粒子群算法会有同样不错的表现.\n\n')
 
         self.tip_label.setStyleSheet('''
                     QLabel {
                         font-family: "Dengxian";
-                        font: 16px;
+                        font: 17px;
                     }
                 ''')
         self.tip_button.setStyleSheet('''
@@ -752,107 +752,7 @@ class oneWidget(QWidget):
             self.tip_dialog.close()
 
     def setboxStyle(self):
-        self.datasetbox.setStyleSheet('''
-            QGroupBox {
-                border: 1px solid #cccccc;
-                border-radius: 5px;
-                font-family: "Dengxian";
-                font: 15px;
-                margin-top: 6px;
-            }
-            QGroupBox::title {
-                subcontrol-origin: margin;
-                subcontrol-position: top center;
-                margin-top: 0px;
-            }
-            QLabel {
-                font-family: "Dengxian";
-                font: 16px;
-                vertical-align: middle;
-            }
-            QLineEdit {
-                background-color: #ffffff;
-                border: 1px solid #666666;
-                border-radius: 2px;
-                min-height: 22px;
-            }
-        ''')
-        self.netbox.setStyleSheet('''
-            QGroupBox {
-                border: 1px solid #cccccc;
-                border-radius: 5px;
-                font-family: "Dengxian";
-                font: 15px;
-                margin-top: 6px;
-            }
-            QGroupBox::title {
-                subcontrol-origin: margin;
-                subcontrol-position: top center;
-                margin-top: 0px;
-            }
-            QLabel {
-                font-family: "Dengxian";
-                font: 16px;
-                vertical-align: middle;
-            }
-            QLineEdit {
-                background-color: #ffffff;
-                border: 1px solid #666666;
-                border-radius: 2px;
-                min-height: 22px;
-            }
-        ''')
-        self.hyperbox.setStyleSheet('''
-            QGroupBox {
-                border: 1px solid #cccccc;
-                border-radius: 5px;
-                font-family: "Dengxian";
-                font: 15px;
-                margin-top: 6px;
-            }
-            QGroupBox::title {
-                subcontrol-origin: margin;
-                subcontrol-position: top center;
-                margin-top: 0px;
-            }
-            QLabel {
-                font-family: "Dengxian";
-                font: 16px;
-                vertical-align: middle;
-            }
-            QLineEdit {
-                background-color: #ffffff;
-                border: 1px solid #666666;
-                border-radius: 2px;
-                min-height: 22px;
-            }
-        ''')
-        self.optbox.setStyleSheet('''
-            QGroupBox {
-                border: 1px solid #cccccc;
-                border-radius: 5px;
-                font-family: "Dengxian";
-                font: 15px;
-                margin-top: 6px;
-            }
-            QGroupBox::title {
-                subcontrol-origin: margin;
-                subcontrol-position: top center;
-                margin-top: 0px;
-            }
-            QLabel {
-                font-family: "Dengxian";
-                font: 16px;
-                vertical-align: middle;
-            }
-            QLineEdit {
-                background-color: #ffffff;
-                border: 1px solid #666666;
-                border-radius: 2px;
-                min-height: 22px;
-            }
-        ''')
-        self.extrabox.setStyleSheet('''
+        self.main_widget.setStyleSheet('''
             QGroupBox {
                 border: 1px solid #cccccc;
                 border-radius: 5px;
@@ -879,6 +779,12 @@ class oneWidget(QWidget):
         ''')
 
     def setTips(self):
+        self.hyperCheckbox1.setToolTip("k:k折交叉验证中的参数k.如果取1,默认处理为将训练集均分10块,进行3次训练取平均.")
+        self.hyperCheckbox2.setToolTip("num_epochs:训练轮数.")
+        self.hyperCheckbox3.setToolTip("batch_size:批量处理样本集大小.")
+        self.hyperCheckbox4.setToolTip("learning_rate:学习率.影响参数更新步长.")
+        self.hyperCheckbox5.setToolTip("weight_decay:权重衰减参数.衰减的程度越大越容易避免过拟合.没有过拟合情况不建议使用.")
+
         self.optEdit_31.setToolTip("建议适当多取预设数,可以使建模更加完善.")
         self.optEdit_33.setToolTip("κ的取值越小,越偏向探索;取值越大,越偏向利用.中间值建议取2.5左右.")
         self.optEdit_34.setToolTip("χ的取值越小,越偏向利用;取值越大,越偏向探索.建议取值接近于0.0.")

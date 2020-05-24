@@ -91,18 +91,12 @@ class PrepareData(object):
             trans.append(torchvision.transforms.Resize(self.resize))
         trans.append(torchvision.transforms.ToTensor())
 
-        try:
-            data = torchvision.datasets.ImageFolder(root = path, transform = torchvision.transforms.Compose(trans))
-            return data
-        except FileNotFoundError:
-            print('文件路径错误,无法读取图像数据.')
+        data = torchvision.datasets.ImageFolder(root = path, transform = torchvision.transforms.Compose(trans))
+        return data
 
     # 要求:.csv文件中的数据特征不包括id这样的无效特征.
     def get_csv_data(self, path):
-        try:
-            data = pd.read_csv(path)
-        except FileNotFoundError:
-            print('文件路径错误,无法读取.csv文件.')
+        data = pd.read_csv(path)
 
         # 最后一列被排除,所以all_features只包括特征,不包括标签.
         all_features = data.iloc[:, :-1]

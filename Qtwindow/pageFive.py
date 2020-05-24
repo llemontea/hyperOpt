@@ -1,5 +1,4 @@
-from PyQt5.QtGui import QPixmap
-from PyQt5.QtCore import *
+from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
 class fiveWidget(QWidget):
@@ -26,18 +25,6 @@ class fiveWidget(QWidget):
         return self.main_widget
 
     def init_widget(self):
-        '''
-        self.label_1 = QLabel("1.如果对超参数优化的目标比较宽松,想通过比较少的迭代找到一个较好的超参数即可:建议使用贝叶斯优化或者随机搜索.")
-        self.label_2 = QLabel("2.如果希望找到表现尽可能好的超参数,但对时间要求比较紧:建议使用贝叶斯优化.")
-        self.label_3 = QLabel("3.如果希望找到表现尽可能好的超参数,但对时间要求比较宽松:建议使用贝叶斯优化或者粒子群算法.")
-        self.label_4 = QLabel("4.如果目标是找到一个包含数个超参数取值的,表现较好的超参数取值集合:建议使用遗传算法.")
-        self.label_5 = QLabel("5.如果允许进行的优化迭代次数极少,可以考虑使用网格搜索或者随机搜索这类比较简单的优化方法.")
-        self.label_6 = QLabel("6.如果待优化的超参数数量较多,不建议使用网格搜索.")
-        self.label_7 = QLabel("7.如果初步优化结果发现最优超参数取值集中在极小的范围内,贝叶斯优化的表现可能比较好.")
-        self.label_8 = QLabel("8.如果初步优化结果发现在超参数取值在较大范围内都有相近的表现,则不建议使用遗传算法,因为很容易陷入局部最优.")
-        self.label_9 = QLabel("9.在网络模型的稳定性非常差或者非常好的情况下,均建议使用贝叶斯优化.前者是因为贝叶斯优化更容易捕捉较优取值的细节,后者是因为可以充分发挥贝叶斯优化的优势.")
-        self.label_10 = QLabel("10.单超参数优化问题可以倾向于使用随机搜索和贝叶斯优化,但多参数优化问题中遗传算法和粒子群算法会有同样不错的表现.")
-        '''
         self.tiplabel_1 = QLabel("> > > 关于超参数优化相关参数的设置......")
 
         self.label_1 = QLabel("1.网格搜索的迭代次数和步长大小成反比.为了细化搜索空间可以取较小的步长,但该操作会增加迭代次数,尤其是在多超参数优化情况下.")

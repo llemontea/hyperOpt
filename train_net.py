@@ -54,7 +54,6 @@ class Train(object):
     模型验证效果函数.
     把训练后的模型传入,看它在验证集或者测试集上的表现.
     '''
-
     def evaluate_accuracy(self, net, exam_iter):
         acc_sum = 0.0
         n = 0
@@ -72,7 +71,6 @@ class Train(object):
     模型训练函数.
     接收一个训练集和一个验证集/测试集.训练集用来训练模型,更新网络参数,再拿到验证集或测试集上验证效果.
     '''
-
     def train_net(self, net, optimizer, train_iter, exam_iter, num_epochs):
         print('training on', device)
 
@@ -130,7 +128,6 @@ class Train(object):
         -> mnist_test:测试集.dataset类型.可以被torch.utils.data.DataLoader调用.未必有.
         -> **hyperparams:超参数取值字典.所有可以被优化的超参数都包括在内.
     '''
-
     def k_fold_without_test(self, path, train_data, hyperparams):
         # 支持的超参数优化有:k,num_epochs,batch_size,lr,weight_decay.
         # 以上超参数都有默认值,如果不指定的话统一采用默认值(但是都得有,不能是空的).
@@ -277,7 +274,6 @@ class Train(object):
         print('net:', net)
 
         saveName = 'save_model/' + modelName[:-3] + '.pt'
-        # saveName = modelName[:-3] + '.pt'
         print('saveName:', saveName)
 
         torch.save(net, saveName)

@@ -23,7 +23,7 @@ class MainWindow(QMainWindow):
         self.setFixedSize(1358, 800)
         self.setWindowTitle('Hyperparameter optimization')
         self.setWindowIcon(QIcon('icon/logo.png'))
-        self.setWindowOpacity(0.9)  # 设置窗口透明度
+        self.setWindowOpacity(0.9) # 设置窗口透明度
         self.setWindowFlag(Qt.FramelessWindowHint)
 
         self.mysql_flag = True
@@ -229,6 +229,14 @@ class MainWindow(QMainWindow):
                 message.addButton(QPushButton("确定"), QMessageBox.YesRole)
                 message.exec_()
                 flag = False
+            elif not(os.path.exists(str(self.firstWidget.filepathEdit1.text()))):
+                message = QMessageBox()
+                message.setWindowIcon(QIcon('icon/tip.png'))
+                message.setWindowTitle('数据集设定错误')
+                message.setText('torchvision.datasets数据集的存储路径不存在！')
+                message.addButton(QPushButton("确定"), QMessageBox.YesRole)
+                message.exec_()
+                flag = False
         elif self.firstWidget.data_radio2.isChecked():
             if self.firstWidget.filepathEdit21.text() == '' and self.firstWidget.filepathEdit22.text() == '':
                 message = QMessageBox()
@@ -243,6 +251,22 @@ class MainWindow(QMainWindow):
                 message.setWindowIcon(QIcon('icon/tip.png'))
                 message.setWindowTitle('数据集设定错误')
                 message.setText('未选择训练集图像的存储文件夹路径！')
+                message.addButton(QPushButton("确定"), QMessageBox.YesRole)
+                message.exec_()
+                flag = False
+            elif not(os.path.exists(str(self.firstWidget.filepathEdit21.text()))):
+                message = QMessageBox()
+                message.setWindowIcon(QIcon('icon/tip.png'))
+                message.setWindowTitle('数据集设定错误')
+                message.setText('训练集图像的存储文件夹路径不存在！')
+                message.addButton(QPushButton("确定"), QMessageBox.YesRole)
+                message.exec_()
+                flag = False
+            elif self.firstWidget.filepathEdit22.text() != '' and not(os.path.exists(str(self.firstWidget.filepathEdit22.text()))):
+                message = QMessageBox()
+                message.setWindowIcon(QIcon('icon/tip.png'))
+                message.setWindowTitle('数据集设定错误')
+                message.setText('测试集图像的存储文件夹路径不存在！')
                 message.addButton(QPushButton("确定"), QMessageBox.YesRole)
                 message.exec_()
                 flag = False
@@ -268,6 +292,22 @@ class MainWindow(QMainWindow):
                 message.setWindowIcon(QIcon('icon/tip.png'))
                 message.setWindowTitle('数据集设定错误')
                 message.setText('上传的文件不是.csv类型的文件！')
+                message.addButton(QPushButton("确定"), QMessageBox.YesRole)
+                message.exec_()
+                flag = False
+            elif not(os.path.exists(str(self.firstWidget.filepathEdit31.text()))):
+                message = QMessageBox()
+                message.setWindowIcon(QIcon('icon/tip.png'))
+                message.setWindowTitle('数据集设定错误')
+                message.setText('作为训练集的.csv文件不存在！')
+                message.addButton(QPushButton("确定"), QMessageBox.YesRole)
+                message.exec_()
+                flag = False
+            elif self.firstWidget.filepathEdit32.text() != '' and not(os.path.exists(str(self.firstWidget.filepathEdit32.text()))):
+                message = QMessageBox()
+                message.setWindowIcon(QIcon('icon/tip.png'))
+                message.setWindowTitle('数据集设定错误')
+                message.setText('作为测试集的.csv文件不存在！')
                 message.addButton(QPushButton("确定"), QMessageBox.YesRole)
                 message.exec_()
                 flag = False
@@ -1013,7 +1053,7 @@ class MainWindow(QMainWindow):
                     global_variable.axv.append((i + 1) * int(self.firstWidget.optEdit_52.text()) + (i * (i + 1) / 2) * int(self.firstWidget.optEdit_53.text()))
             print("global_variable.axv:", global_variable.axv)
 
-            '''截止上述内容为止,优化器预设值确定完毕.下一步,根据用户选择的优化器信息,调用相应的优化器,开始训练.'''
+            '''截止上述内容为止,优化器预设值确定完毕.在数据集路径获取正确的情况下,根据用户选择的优化器信息,调用相应的优化器,开始训练.'''
             # 界面跳转.跳转时要禁止对超参数进行重复设定,除非训练正常结束或者在训练过程中手动确认退出.
             self.stackWidget.setCurrentIndex(1)
             self.secondWidget.header_label.setText('超参数优化正在进行中......')
@@ -1432,6 +1472,14 @@ class MainWindow(QMainWindow):
             message.setWindowIcon(QIcon('icon/error.png'))
             message.setWindowTitle('优化错误!')
             message.setText('模型计算出现错误.请检查您的模型结构和数据集样本是否匹配.\n在两者不匹配的情况下,计算过程中会出现此类错误.\n另一个原因可能是batch_size设置的值过大,可以适当减小后再次尝试.')
+            message.addButton(QPushButton("确定"), QMessageBox.YesRole)
+            message.exec_()
+            self.secondWidget.header_label.setText('优化过程出现异常,已退出.')
+        elif val == 3:
+            message = QMessageBox()
+            message.setWindowIcon(QIcon('icon/error.png'))
+            message.setWindowTitle('优化错误!')
+            message.setText('未知错误.请仔细查看您的模型,数据集,超参数设定等是否存在问题.')
             message.addButton(QPushButton("确定"), QMessageBox.YesRole)
             message.exec_()
             self.secondWidget.header_label.setText('优化过程出现异常,已退出.')

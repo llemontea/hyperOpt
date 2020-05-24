@@ -1,9 +1,9 @@
-from PyQt5 import QtWidgets
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.animation import FuncAnimation
 from matplotlib.figure import Figure
+from PyQt5.QtWidgets import *
+from PyQt5 import QtWidgets
+from PyQt5.QtGui import *
 import global_variable
 import numpy as np
 import pymysql
@@ -47,6 +47,7 @@ class twoWidget(QWidget):
 
         self.test_canvas = Canvas('test_accuracy', self.main_widget, width = 3, height = 5, dpi = 100)
         self.best_canvas = Canvas('best_accuracy', self.main_widget, width = 3, height = 5, dpi = 100)
+        # interval设定的是更新频率,单位是ms.10000即每隔10s更新一次.
         self.test_ani = FuncAnimation(self.test_canvas.figure, self.test_update_line, interval = 10000)
         self.best_ani = FuncAnimation(self.best_canvas.figure, self.best_update_line, interval = 10000)
 
