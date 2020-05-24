@@ -1,0 +1,1 @@
+result_fig is a folder stored .png.
