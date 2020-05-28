@@ -28,8 +28,10 @@ class gridThread(QThread):
             self.trigger.emit(1)
         except RuntimeError:
             self.trigger.emit(2)
-        except Exception:
+        except AttributeError:
             self.trigger.emit(3)
+        except Exception:
+            self.trigger.emit(4)
         else:
             self.trigger.emit(0)
 
@@ -55,8 +57,10 @@ class randomThread(QThread):
             self.trigger.emit(1)
         except RuntimeError:
             self.trigger.emit(2)
-        except Exception:
+        except AttributeError:
             self.trigger.emit(3)
+        except Exception:
+            self.trigger.emit(4)
         else:
             self.trigger.emit(0)
 
@@ -86,8 +90,10 @@ class bayesianThread(QThread):
             self.trigger.emit(1)
         except RuntimeError:
             self.trigger.emit(2)
-        except Exception:
+        except AttributeError:
             self.trigger.emit(3)
+        except Exception:
+            self.trigger.emit(4)
         else:
             self.trigger.emit(0)
 
@@ -117,8 +123,10 @@ class geneticThread(QThread):
             self.trigger.emit(1)
         except RuntimeError:
             self.trigger.emit(2)
-        except Exception:
+        except AttributeError:
             self.trigger.emit(3)
+        except Exception:
+            self.trigger.emit(4)
         else:
             self.trigger.emit(0)
 
@@ -150,7 +158,9 @@ class psoThread(QThread):
             self.trigger.emit(1)
         except RuntimeError:
             self.trigger.emit(2)
-        except Exception:
+        except AttributeError:
             self.trigger.emit(3)
+        except Exception:
+            self.trigger.emit(4)
         else:
             self.trigger.emit(0)

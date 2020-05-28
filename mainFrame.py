@@ -974,7 +974,7 @@ class MainWindow(QMainWindow):
             net_path = str(self.firstWidget.netFilepathEdit.text())
             _, fname = os.path.split(net_path)
             aim_path = 'save_model/' + fname
-            net_path = shutil.copy(net_path, aim_path)
+            net_path = shutil.copyfile(net_path, aim_path)
             print('model_name:', net_path)
 
             basic_params = {'k':int(self.firstWidget.hyperDefault1.text()), 'num_epochs':int(self.firstWidget.hyperDefault2.text()), 'batch_size':int(self.firstWidget.hyperDefault3.text()), 'lr':float(self.firstWidget.hyperDefault4.text()), 'weight_decay': float(self.firstWidget.hyperDefault5.text())}
@@ -1476,6 +1476,14 @@ class MainWindow(QMainWindow):
             message.exec_()
             self.secondWidget.header_label.setText('优化过程出现异常,已退出.')
         elif val == 3:
+            message = QMessageBox()
+            message.setWindowIcon(QIcon('icon/error.png'))
+            message.setWindowTitle('优化错误!')
+            message.setText('您提供的模型文件出现了问题.请务必确保您的模型文件中已经对模型实例化处理,并用net变量名承接.')
+            message.addButton(QPushButton("确定"), QMessageBox.YesRole)
+            message.exec_()
+            self.secondWidget.header_label.setText('优化过程出现异常,已退出.')
+        elif val == 4:
             message = QMessageBox()
             message.setWindowIcon(QIcon('icon/error.png'))
             message.setWindowTitle('优化错误!')

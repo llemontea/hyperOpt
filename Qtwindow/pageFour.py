@@ -173,25 +173,16 @@ class fourWidget(QWidget):
             try:
                 print(dialog.selectedFiles())
                 filenames = dialog.selectedFiles()
-                print("1")
-                self.fileLabel.setText(str(filenames[0]))
-                print("2")
                 with open(filenames[0], 'rb') as fp:
                     # 自适应编码格式读取.有些.txt文件和.py文件是不同的编码,所以不解码的话就无法打开,进而卡死.
                     data = fp.read()
-                    print("3")
                     f_charinfo = chardet.detect(data)
-                    print("4")
                     self.code = f_charinfo['encoding']
-                    print("5")
                     edit.setPlainText(str(data.decode(f_charinfo['encoding'])))
-                    print("6")
                     edit.setEnabled(True)
-                    print("7")
+                    self.fileLabel.setText(str(filenames[0]))
                     self.saveButton.setEnabled(True)
-                    print("8")
                     self.saveasButton.setEnabled(True)
-                    print("9")
             except Exception:
                 message = QMessageBox()
                 message.setWindowIcon(QIcon('icon/tip.png'))
